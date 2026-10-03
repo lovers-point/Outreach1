@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Outreach Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Header Navigation -->
+    <header class="header">
+      <div class="nav-tabs">
+        <button id="navOutreachBtn" class="nav-btn active">Outreach Generator</button>
+        <button id="navRepliesBtn" class="nav-btn">Interested Replies</button>
+      </div>
+      <button id="openTemplateModalBtn" class="secondary-btn">Customize Templates</button>
+    </header>
+
+    <!-- PAGE 1: OUTREACH GENERATOR -->
+    <main id="pageOutreach" class="page-content">
+      <div class="grid-layout">
+        <!-- Left Column: Controls -->
+        <div class="controls-column">
+          <div class="form-group">
+            <label for="contactName">CONTACT NAME *</label>
+            <div class="input-with-btn">
+              <input type="text" id="contactName" placeholder="e.g. Bradlee Bartram">
+              <button id="clearNameBtn" class="inline-btn">Reset</button>
+            </div>
+            <small>First names are automatically extracted</small>
+          </div>
+
+          <div class="form-group">
+            <label>MESSAGE STAGE *</label>
+            <div class="button-grid">
+              <button class="stage-btn active-tab" data-stage="inmail">InMail 1</button>
+              <button class="stage-btn" data-stage="inmail2">InMail 2</button>
+              <button class="stage-btn" data-stage="dm">DM 1</button>
+              <button class="stage-btn" data-stage="dm2">DM 2</button>
+              <button class="stage-btn" data-stage="fu1">FU 1</button>
+              <button class="stage-btn" data-stage="fu2">FU 2</button>
+              <button class="stage-btn" data-stage="fu3">FU 3</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="label-with-action">
+              <label>SELECT SIGNATURE</label>
+              <button id="openAddSigModalBtn" class="text-link-btn">+ Add</button>
+            </div>
+            <div id="signatureListContainer" class="signature-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Live Preview -->
+        <div class="preview-column">
+          <div class="preview-header">
+            <span>LIVE PREVIEW</span>
+            <span id="modeBadge" class="mode-badge">InMail Mode</span>
+          </div>
+
+          <div id="subjectBox" class="preview-box">
+            <div class="box-header">
+              <label>SUBJECT</label>
+              <button id="copySubjectBtn" class="text-link-btn"><span id="subjCopyText">Copy Subject</span></button>
+            </div>
+            <div id="previewSubject" class="preview-text">Quick question, [Name]</div>
+          </div>
+
+          <div class="preview-box">
+            <div class="box-header">
+              <label>MESSAGE BODY</label>
+              <button id="copyBodyBtn" class="text-link-btn"><span id="bodyCopyText">Copy Body</span></button>
+            </div>
+            <div id="previewBody" class="preview-text"></div>
+          </div>
+
+          <button id="copyFullScriptBtn" class="primary-btn wide-btn">
+            <span id="fullCopyText">Copy Full Script</span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- PAGE 2: INTERESTED REPLIES -->
+    <main id="pageReplies" class="page-content hidden">
+      <div class="grid-layout">
+        <div class="controls-column">
+          <div class="form-group">
+            <label for="replyContactName">CONTACT NAME</label>
+            <div class="input-with-btn">
+              <input type="text" id="replyContactName" placeholder="e.g. Bradlee Bartram">
+              <button id="clearReplyNameBtn" class="inline-btn">Reset</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="label-with-action">
+              <label for="clientSelect">SELECT CLIENT</label>
+              <button id="openAddClientModalBtn" class="text-link-btn">+ Add Client</button>
+            </div>
+            <select id="clientSelect" class="full-select"></select>
+          </div>
+
+          <div class="form-group">
+            <div class="label-with-action">
+              <label>RESPONSE SCENARIOS</label>
+              <button id="openAddReplyModalBtn" class="text-link-btn">+ Add Response</button>
+            </div>
+            <div id="replyTemplateList" class="reply-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>SELECT SIGNATURE</label>
+            <div id="replySigContainer" class="signature-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-column">
+          <div class="preview-header">
+            <span>REPLY PREVIEW</span>
+          </div>
+
+          <div class="preview-box">
+            <div class="box-header">
+              <label>RESPONSE BODY</label>
+              <button id="copyReplyBodyBtn" class="text-link-btn"><span id="replyBodyCopyText">Copy Body</span></button>
+            </div>
+            <div id="previewReplyBody" class="preview-text"></div>
+          </div>
+
+          <button id="copyFullReplyBtn" class="primary-btn wide-btn">
+            <span id="fullReplyCopyText">Copy Response</span>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+  <div id="templateModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h3>Customize Templates</h3>
+      <div id="modalTemplateBody"></div>
+      <div class="modal-actions">
+        <button id="resetDefaultsBtn" class="danger-btn">Reset Defaults</button>
+        <div>
+          <button id="cancelTemplateModalBtn" class="secondary-btn">Cancel</button>
+          <button id="saveTemplatesBtn" class="primary-btn">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="addSigModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h3>Add New Signature</h3>
+      <div class="form-group">
+        <label>SIGNATURE NAME / LABEL</label>
+        <input type="text" id="newSigName" placeholder="e.g. John Doe">
+      </div>
+      <div class="form-group">
+        <label>SIGNATURE TEXT</label>
+        <textarea id="newSigText" rows="3" placeholder="Best regards,&#10;John Doe | TalentPath Search"></textarea>
+      </div>
+      <div class="modal-actions">
+        <div></div>
+        <div>
+          <button id="cancelAddSigBtn" class="secondary-btn">Cancel</button>
+          <button id="saveNewSigBtn" class="primary-btn">Save Signature</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="addReplyModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h3>Add Response Scenario</h3>
+      <div class="form-group">
+        <label>SCENARIO LABEL</label>
+        <input type="text" id="newReplyLabel" placeholder="e.g. Not Interested Right Now">
+      </div>
+      <div class="form-group">
+        <label>RESPONSE BODY</label>
+        <textarea id="newReplyBody" rows="4" placeholder="Hi [Name], thanks for letting me know..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <div></div>
+        <div>
+          <button id="cancelAddReplyBtn" class="secondary-btn">Cancel</button>
+          <button id="saveNewReplyBtn" class="primary-btn">Save Response</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="addClientModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h3>Add Client</h3>
+      <div class="form-group">
+        <label>CLIENT NAME</label>
+        <input type="text" id="newClientName" placeholder="e.g. John Smith">
+      </div>
+      <div class="form-group">
+        <label>CALENDLY / BOOKING LINK</label>
+        <input type="text" id="newClientCalendar" placeholder="[Calendar]">
+      </div>
+      <div class="modal-actions">
+        <div></div>
+        <div>
+          <button id="cancelAddClientBtn" class="secondary-btn">Cancel</button>
+          <button id="saveNewClientBtn" class="primary-btn">Save Client</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
